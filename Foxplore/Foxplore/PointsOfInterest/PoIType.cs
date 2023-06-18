@@ -4,5 +4,6 @@ public enum PoIType
 {
     Park,
     ViewPoint,
+    TechnicalFeature,
     Test,
 }

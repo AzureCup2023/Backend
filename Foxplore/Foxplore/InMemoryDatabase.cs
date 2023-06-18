@@ -1,5 +1,6 @@
 ﻿using Foxplore.PointsOfInterest;
 using Foxplore.SerialisationWrappers.ParkWrapper;
+using Foxplore.SerialisationWrappers.TechnicalFeatureWrapper;
 using Foxplore.SerialisationWrappers.ViewpointWrapper;
 using Foxplore.Utils;
 using Xunit;
@@ -15,6 +16,7 @@ public class InMemoryDatabase
     {
         PoIs.AddRange(LoadParks());
         PoIs.AddRange(LoadViewpoints());
+        PoIs.AddRange(LoadTechnicalFeatures());
     }
     
     internal static IEnumerable<Park> LoadParks()
@@ -27,6 +29,12 @@ public class InMemoryDatabase
     {
         return ViewpointWrapper.FromJson(File.ReadAllText("Data/viewpoints.json"))
             .Features.Select(Viewpoint.FromFeature);
+    }
+    
+    internal static IEnumerable<TechnicalFeature> LoadTechnicalFeatures()
+    {
+        return TechnicalFeatureWrapper.FromJson(File.ReadAllText("Data/technicalFeatures.json"))
+            .Features.Select(TechnicalFeature.FromFeature);
     }
 }
 
@@ -45,5 +53,12 @@ public class InitializerTests
     {
         var parks = InMemoryDatabase.LoadParks();
         Assert.Equal(11, parks.Count());
+    }
+    
+    [Fact]
+    public void TestLoadTechnicalFeatures()
+    {
+        var technicalFeatures = InMemoryDatabase.LoadTechnicalFeatures();
+        Assert.Equal(5488, technicalFeatures.Count());
     }
 }

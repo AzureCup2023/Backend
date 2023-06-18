@@ -27,6 +27,12 @@ public class PointsOfInterestController : ControllerBase
         return _context.PoIs.OfType<Park>().ToList();
     }
     
+    [HttpGet(Name = "GetTechnicalFeatures")]
+    public IEnumerable<TechnicalFeature> GetTechnicalFeatures()
+    {
+        return _context.PoIs.OfType<TechnicalFeature>().ToList();
+    }
+    
     [HttpGet(Name = "GetAll")]
     public IEnumerable<IPoI> GetAll()
     {

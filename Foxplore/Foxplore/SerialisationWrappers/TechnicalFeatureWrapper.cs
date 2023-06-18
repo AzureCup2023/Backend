@@ -5,84 +5,78 @@
 #pragma warning disable CS8601
 #pragma warning disable CS8603
 
-namespace Foxplore.SerialisationWrappers.ViewpointWrapper
+namespace Foxplore.SerialisationWrappers.TechnicalFeatureWrapper
 {
-    using System.Globalization;
+    using System;
+    using System.Collections.Generic;
+
     using System.Text.Json;
     using System.Text.Json.Serialization;
+    using System.Globalization;
 
-    public partial class ViewpointWrapper
+    public partial class TechnicalFeatureWrapper
     {
-        [JsonPropertyName("type")] public string Type { get; set; }
+        [JsonPropertyName("type")]
+        public string Type { get; set; }
 
-        [JsonPropertyName("name")] public string Name { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
 
-        [JsonPropertyName("crs")] public Crs Crs { get; set; }
+        [JsonPropertyName("crs")]
+        public Crs Crs { get; set; }
 
-        [JsonPropertyName("features")] public Feature[] Features { get; set; }
+        [JsonPropertyName("features")]
+        public Feature[] Features { get; set; }
     }
 
     public partial class Crs
     {
-        [JsonPropertyName("type")] public string Type { get; set; }
+        [JsonPropertyName("type")]
+        public string Type { get; set; }
 
-        [JsonPropertyName("properties")] public CrsProperties Properties { get; set; }
+        [JsonPropertyName("properties")]
+        public Properties Properties { get; set; }
     }
 
-    public partial class CrsProperties
+    public partial class Properties
     {
-        [JsonPropertyName("name")] public string Name { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
     }
 
     public partial class Feature
     {
-        [JsonPropertyName("type")] public FeatureType Type { get; set; }
+        [JsonPropertyName("type")]
+        public FeatureType Type { get; set; }
 
-        [JsonPropertyName("geometry")] public Geometry Geometry { get; set; }
+        [JsonPropertyName("geometry")]
+        public Geometry Geometry { get; set; }
 
-        [JsonPropertyName("properties")] public FeatureProperties Properties { get; set; }
+        [JsonPropertyName("properties")]
+        public Dictionary<string, long?> Properties { get; set; }
     }
 
     public partial class Geometry
     {
-        [JsonPropertyName("type")] public GeometryType Type { get; set; }
+        [JsonPropertyName("type")]
+        public GeometryType Type { get; set; }
 
-        [JsonPropertyName("coordinates")] public double[] Coordinates { get; set; }
+        [JsonPropertyName("coordinates")]
+        public double[] Coordinates { get; set; }
     }
 
-    public partial class FeatureProperties
+    public enum GeometryType { Point };
+
+    public enum FeatureType { Feature };
+
+    public partial class TechnicalFeatureWrapper
     {
-        [JsonPropertyName("OBJECTID")] public long Objectid { get; set; }
-
-        [JsonPropertyName("VYHBOD_ID")] public long VyhbodId { get; set; }
-
-        [JsonPropertyName("MC")] public string Mc { get; set; }
-
-        [JsonPropertyName("KU")] public string Ku { get; set; }
-
-        [JsonPropertyName("NAZEVSTANOVISTE")] public string Nazevstanoviste { get; set; }
-    }
-
-    public enum GeometryType
-    {
-        Point
-    };
-
-    public enum FeatureType
-    {
-        Feature
-    };
-
-    public partial class ViewpointWrapper
-    {
-        public static ViewpointWrapper FromJson(string json) =>
-            JsonSerializer.Deserialize<ViewpointWrapper>(json, Converter.Settings);
+        public static TechnicalFeatureWrapper FromJson(string json) => JsonSerializer.Deserialize<TechnicalFeatureWrapper>(json, Foxplore.SerialisationWrappers.TechnicalFeatureWrapper.Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this ViewpointWrapper self) =>
-            JsonSerializer.Serialize(self, Converter.Settings);
+        public static string ToJson(this TechnicalFeatureWrapper self) => JsonSerializer.Serialize(self, Foxplore.SerialisationWrappers.TechnicalFeatureWrapper.Converter.Settings);
     }
 
     internal static class Converter
@@ -111,7 +105,6 @@ namespace Foxplore.SerialisationWrappers.ViewpointWrapper
             {
                 return GeometryType.Point;
             }
-
             throw new Exception("Cannot unmarshal type GeometryType");
         }
 
@@ -122,7 +115,6 @@ namespace Foxplore.SerialisationWrappers.ViewpointWrapper
                 JsonSerializer.Serialize(writer, "Point", options);
                 return;
             }
-
             throw new Exception("Cannot marshal type GeometryType");
         }
 
@@ -140,7 +132,6 @@ namespace Foxplore.SerialisationWrappers.ViewpointWrapper
             {
                 return FeatureType.Feature;
             }
-
             throw new Exception("Cannot unmarshal type FeatureType");
         }
 
@@ -151,20 +142,16 @@ namespace Foxplore.SerialisationWrappers.ViewpointWrapper
                 JsonSerializer.Serialize(writer, "Feature", options);
                 return;
             }
-
             throw new Exception("Cannot marshal type FeatureType");
         }
 
         public static readonly FeatureTypeConverter Singleton = new FeatureTypeConverter();
     }
-
+    
     public class DateOnlyConverter : JsonConverter<DateOnly>
     {
         private readonly string serializationFormat;
-
-        public DateOnlyConverter() : this(null)
-        {
-        }
+        public DateOnlyConverter() : this(null) { }
 
         public DateOnlyConverter(string? serializationFormat)
         {
@@ -185,9 +172,7 @@ namespace Foxplore.SerialisationWrappers.ViewpointWrapper
     {
         private readonly string serializationFormat;
 
-        public TimeOnlyConverter() : this(null)
-        {
-        }
+        public TimeOnlyConverter() : this(null) { }
 
         public TimeOnlyConverter(string? serializationFormat)
         {
@@ -248,8 +233,7 @@ namespace Foxplore.SerialisationWrappers.ViewpointWrapper
             writer.WriteStringValue(text);
         }
 
-        public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert,
-            JsonSerializerOptions options)
+        public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             string? dateText = reader.GetString();
 
