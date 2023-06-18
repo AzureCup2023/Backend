@@ -6,12 +6,8 @@ namespace Foxplore.PointsOfInterest;
 public sealed class Park : PoI
 {
     public WGSCoordinate[] Coordinates;
-    
-    public Park(): base("test", 0,0, PoIType.Test)
-    {
-        Coordinates = new WGSCoordinate[0];
-    }
-    public Park(string name, float longitude, float latitude, WGSCoordinate[] coordinates) 
+
+    private Park(string name, float longitude, float latitude, WGSCoordinate[] coordinates) 
         : base(name, longitude, latitude, PoIType.Park)
     {
         Coordinates = coordinates;

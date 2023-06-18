@@ -5,10 +5,6 @@ namespace Foxplore.PointsOfInterest;
 
 public sealed class Viewpoint : PoI
 {
-    public Viewpoint(): base("test", 0,0, PoIType.Test)
-    {
-    }
-    
     private Viewpoint(string name, float longitude, float latitude) 
         : base(name, longitude, latitude, PoIType.ViewPoint)
     {

@@ -8,8 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddDbContext<PoIContext>(
-    o => o.UseSqlite("Data Source=Foxplore.db"));
+// builder.Services.AddDbContext<PoIContext>(
+//     o => o.UseSqlite("Data Source=Foxplore.db"));
+builder.Services.AddSingleton<InMemoryDatabase>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -18,19 +19,16 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 //setup database
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<PoIContext>();
-    DbInitializer.Initialize(context);
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var services = scope.ServiceProvider;
+//     var context = services.GetRequiredService<PoIContext>();
+//     DbInitializer.Initialize(context);
+// }
 
 app.UseHttpsRedirection();
 
