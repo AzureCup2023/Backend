@@ -1,5 +1,6 @@
 ﻿using Foxplore.PointsOfInterest;
 using Foxplore.SerialisationWrappers.ParkWrapper;
+using Foxplore.SerialisationWrappers.TechnicalFeatureWrapper;
 using Foxplore.SerialisationWrappers.ViewpointWrapper;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -30,6 +31,12 @@ public static class DbInitializer
             context.Parks.Add(park);
         }
 
+        var technicalFeatures = LoadTechnicalFeatures();
+        foreach (var technicalFeature in technicalFeatures)
+        {
+            context.TechnicalFeatures.Add(technicalFeature);
+        }
+        
         context.SaveChanges();
     }
 
@@ -43,6 +50,12 @@ public static class DbInitializer
     {
         return ViewpointWrapper.FromJson(File.ReadAllText("Data/viewpoints.json"))
             .Features.Select(Viewpoint.FromFeature);
+    }
+    
+    internal static IEnumerable<TechnicalFeature> LoadTechnicalFeatures()
+    {
+        return TechnicalFeatureWrapper.FromJson(File.ReadAllText("Data/technicalFeatures.json"))
+            .Features.Select(TechnicalFeature.FromFeature);
     }
 }
 
